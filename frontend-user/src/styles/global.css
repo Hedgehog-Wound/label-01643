@@ -628,6 +628,22 @@ body {
 .ant-picker-dropdown {
   border-radius: var(--radius-lg) !important;
   box-shadow: var(--shadow-lg) !important;
+  z-index: 1050 !important;
+}
+
+/* TimePicker panel - 防止被遮挡 */
+.ant-picker-dropdown .ant-picker-panel-container {
+  overflow: visible !important;
+}
+
+/* TimePicker/DatePicker 确定按钮 - 去掉渐变底色 */
+.ant-picker-ok .ant-btn-primary {
+  background: var(--primary-600) !important;
+  box-shadow: none !important;
+}
+
+.ant-picker-dropdown .ant-picker-time-panel-column {
+  overflow-y: auto !important;
 }
 
 /* List */
