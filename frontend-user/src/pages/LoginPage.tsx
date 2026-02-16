@@ -237,9 +237,7 @@ export default function LoginPage() {
           <p style={{ color: 'var(--gray-400)', fontSize: 13, marginBottom: 8 }}>
             加入 StudyBuddy，开启高效学习之旅
           </p>
-          <p style={{ color: 'var(--gray-500)', fontSize: 12, background: 'var(--gray-100)', padding: '8px 12px', borderRadius: 'var(--radius-sm)', display: 'inline-block' }}>
-            测试账号：zhangsan / lisi / wangwu，密码：admin123
-          </p>
+
         </div>
       </div>
     </div>
