@@ -108,6 +108,11 @@ export default function MyApplicationsPage() {
                   description="撤回后将取消该申请，确定要继续吗？"
                   okText="确认撤回"
                   cancelText="取消"
+                  placement="leftTop"
+                  overlayStyle={{
+                    minWidth: 280,
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
+                  }}
                   onConfirm={(e) => {
                     e?.stopPropagation();
                     handleWithdraw(app.id);
