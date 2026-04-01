@@ -18,4 +18,7 @@ export const applicationApi = {
 
   getMyApplications: (): Promise<(Application & { need?: LearningNeed })[]> =>
     mockApplicationApi.getMyApplications(),
+
+  withdraw: (id: number): Promise<void> =>
+    mockApplicationApi.withdraw(id),
 };

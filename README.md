@@ -39,5 +39,11 @@ Role: 资深全栈交付专家 (Senior Full-Stack Delivery Expert)
 2. 需求浏览页面 /needs - 列表展示、多条件筛选、排序、无限滚动
 3. 需求详情页面 /needs/:id - 完整信息、申请功能
 4. 我的需求管理 /needs/my - 按状态分类显示
+5. 我的申请管理 /applications - 新增一键撤回申请功能：
+   - 仅待审核(PENDING)状态的申请显示撤回按钮
+   - 点击撤回弹出确认对话框，防止误操作
+   - 撤回成功后状态更新为"已撤回"
+   - 撤回时自动减少对应需求的申请数量
+   - 操作过程显示加载状态和成功/失败提示
 
 技术栈要求：React 18 + TypeScript + Ant Design v5 + Zustand + React Hook Form + zod

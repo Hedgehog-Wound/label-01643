@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Spin, Empty, Tag } from 'antd';
-import { ClockCircleOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { Spin, Empty, Tag, Button, Popconfirm } from 'antd';
+import { ClockCircleOutlined, EnvironmentOutlined, RollbackOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { applicationApi } from '../api/application';
+import { useToast } from '../components/Toast';
 import type { Application, LearningNeed } from '../types';
 import { APPLICATION_STATUS_MAP, LOCATION_TYPE_MAP } from '../types';
 
@@ -10,18 +11,36 @@ const statusColors: Record<string, string> = {
   PENDING: 'processing',
   ACCEPTED: 'success',
   REJECTED: 'error',
+  WITHDRAWN: 'default',
 };
 
 export default function MyApplicationsPage() {
   const navigate = useNavigate();
+  const toast = useToast();
   const [applications, setApplications] = useState<(Application & { need?: LearningNeed })[]>([]);
   const [loading, setLoading] = useState(true);
+  const [withdrawingId, setWithdrawingId] = useState<number | null>(null);
 
   useEffect(() => {
     applicationApi.getMyApplications()
       .then(setApplications)
       .finally(() => setLoading(false));
   }, []);
+
+  const handleWithdraw = async (id: number) => {
+    setWithdrawingId(id);
+    try {
+      await applicationApi.withdraw(id);
+      setApplications(prev => prev.map(app => 
+        app.id === id ? { ...app, status: 'WITHDRAWN' } : app
+      ));
+      toast.success('申请撤回成功');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : '撤回失败');
+    } finally {
+      setWithdrawingId(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -82,6 +101,38 @@ export default function MyApplicationsPage() {
                   <div style={{ fontSize: 14, color: 'var(--gray-700)' }}>{app.message}</div>
                 </div>
               </div>
+              
+              {app.status === 'PENDING' && (
+                <Popconfirm
+                  title="确认撤回申请"
+                  description="撤回后将取消该申请，确定要继续吗？"
+                  okText="确认撤回"
+                  cancelText="取消"
+                  placement="leftTop"
+                  overlayStyle={{
+                    minWidth: 280,
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
+                  }}
+                  onConfirm={(e) => {
+                    e?.stopPropagation();
+                    handleWithdraw(app.id);
+                  }}
+                  onCancel={(e) => {
+                    e?.stopPropagation();
+                  }}
+                >
+                  <Button
+                    type="text"
+                    danger
+                    icon={<RollbackOutlined />}
+                    loading={withdrawingId === app.id}
+                    onClick={(e) => e.stopPropagation()}
+                    style={{ marginLeft: 12 }}
+                  >
+                    撤回申请
+                  </Button>
+                </Popconfirm>
+              )}
             </div>
             
             <div style={{ marginTop: 12, fontSize: 12, color: 'var(--gray-400)' }}>
