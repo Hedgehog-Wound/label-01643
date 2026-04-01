@@ -39,5 +39,19 @@ Role: 资深全栈交付专家 (Senior Full-Stack Delivery Expert)
 2. 需求浏览页面 /needs - 列表展示、多条件筛选、排序、无限滚动
 3. 需求详情页面 /needs/:id - 完整信息、申请功能
 4. 我的需求管理 /needs/my - 按状态分类显示
+5. 我的申请管理 /applications - 申请列表、一键撤回申请功能
+
+## 新增功能点
+
+### 一键撤回申请功能
+- **功能位置**：我的申请页面 (`/applications`)
+- **功能描述**：用户可以对状态为"待审核"的申请进行一键撤回操作
+- **实现细节**：
+  - 只有 `PENDING` (待审核) 状态的申请显示"撤回申请"按钮
+  - 点击撤回按钮弹出二次确认对话框，防止误操作
+  - 撤回过程显示加载状态
+  - 操作成功/失败后显示 Toast 提示
+  - 撤回后申请状态变为 `CANCELLED` (已撤回)
+  - 申请卡片新增"查看需求详情"跳转按钮
 
 技术栈要求：React 18 + TypeScript + Ant Design v5 + Zustand + React Hook Form + zod
