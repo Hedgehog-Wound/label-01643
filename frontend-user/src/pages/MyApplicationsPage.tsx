@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Spin, Empty, Tag } from 'antd';
+import { Spin, Empty, Tag, Button, Modal, message } from 'antd';
 import { ClockCircleOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { applicationApi } from '../api/application';
@@ -10,18 +10,47 @@ const statusColors: Record<string, string> = {
   PENDING: 'processing',
   ACCEPTED: 'success',
   REJECTED: 'error',
+  CANCELLED: 'default',
 };
 
 export default function MyApplicationsPage() {
   const navigate = useNavigate();
   const [applications, setApplications] = useState<(Application & { need?: LearningNeed })[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cancelingId, setCancelingId] = useState<number | null>(null);
 
-  useEffect(() => {
+  const fetchApplications = () => {
+    setLoading(true);
     applicationApi.getMyApplications()
       .then(setApplications)
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchApplications();
   }, []);
+
+  const handleCancelApplication = (id: number) => {
+    Modal.confirm({
+      title: '确认撤回申请',
+      content: '您确定要撤回这个申请吗？撤回后将无法恢复。',
+      okText: '确认撤回',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: async () => {
+        try {
+          setCancelingId(id);
+          await applicationApi.cancelApplication(id);
+          message.success('申请已撤回');
+          fetchApplications();
+        } catch (error) {
+          message.error((error as Error).message || '撤回失败');
+        } finally {
+          setCancelingId(null);
+        }
+      },
+    });
+  };
 
   if (loading) {
     return (
@@ -51,7 +80,11 @@ export default function MyApplicationsPage() {
           <div
             key={app.id}
             className="card-interactive"
-            onClick={() => app.need && navigate(`/needs/${app.need.id}`)}
+            onClick={(e) => {
+              if (!(e.target as HTMLElement).closest('button')) {
+                app.need && navigate(`/needs/${app.need.id}`);
+              }
+            }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div style={{ flex: 1 }}>
@@ -82,6 +115,22 @@ export default function MyApplicationsPage() {
                   <div style={{ fontSize: 14, color: 'var(--gray-700)' }}>{app.message}</div>
                 </div>
               </div>
+              
+              {app.status === 'PENDING' && (
+                <div style={{ marginLeft: 16 }}>
+                  <Button
+                    danger
+                    size="small"
+                    loading={cancelingId === app.id}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCancelApplication(app.id);
+                    }}
+                  >
+                    撤回申请
+                  </Button>
+                </div>
+              )}
             </div>
             
             <div style={{ marginTop: 12, fontSize: 12, color: 'var(--gray-400)' }}>

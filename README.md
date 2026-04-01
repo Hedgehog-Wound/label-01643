@@ -41,3 +41,13 @@ Role: 资深全栈交付专家 (Senior Full-Stack Delivery Expert)
 4. 我的需求管理 /needs/my - 按状态分类显示
 
 技术栈要求：React 18 + TypeScript + Ant Design v5 + Zustand + React Hook Form + zod
+
+## 新增功能点
+
+### 一键撤回申请功能
+- 在"我的申请"页面新增撤回申请按钮
+- 仅对待审核（PENDING）状态的申请显示撤回按钮
+- 点击撤回按钮弹出确认对话框，防止误操作
+- 撤回后申请状态变为"已撤回"（CANCELLED）
+- 撤回后自动更新对应需求的申请数量
+- 提供友好的成功/失败提示信息
