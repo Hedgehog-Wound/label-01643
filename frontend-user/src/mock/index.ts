@@ -253,4 +253,20 @@ export const mockApplicationApi = {
       need: mockNeeds.find(n => n.id === app.needId),
     }));
   },
+
+  cancelApplication: async (id: number): Promise<void> => {
+    await delay(300);
+    const app = mockApplications.find(a => a.id === id);
+    if (!app) {
+      throw new Error('申请不存在');
+    }
+    if (app.status !== 'PENDING') {
+      throw new Error('只能撤回待审核状态的申请');
+    }
+    app.status = 'CANCELLED';
+    const need = mockNeeds.find(n => n.id === app.needId);
+    if (need && need.applicationCount) {
+      need.applicationCount--;
+    }
+  },
 };
