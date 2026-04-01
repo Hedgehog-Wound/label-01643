@@ -71,7 +71,7 @@ export default function MyApplicationsPage() {
             key={app.id}
             className="card-interactive"
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16 }}>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
                   <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--gray-900)' }}>
@@ -107,6 +107,8 @@ export default function MyApplicationsPage() {
                   description="撤回后将无法恢复，确定要撤回该申请吗？"
                   okText="确认撤回"
                   cancelText="取消"
+                  placement="bottomRight"
+                  arrow={{ pointAtCenter: true }}
                   onConfirm={() => handleCancelApplication(app.id)}
                 >
                   <Button
@@ -114,7 +116,7 @@ export default function MyApplicationsPage() {
                     danger
                     icon={<RollbackOutlined />}
                     loading={cancelingId === app.id}
-                    style={{ marginTop: 4 }}
+                    style={{ whiteSpace: 'nowrap' }}
                   >
                     撤回申请
                   </Button>
