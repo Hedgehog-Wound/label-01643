@@ -38,7 +38,7 @@ export interface Application {
 export type StudyType = 'EXAM_REVIEW' | 'HOMEWORK' | 'PROJECT' | 'SELF_STUDY' | 'COMPETITION';
 export type LocationType = 'ONLINE' | 'LIBRARY' | 'CLASSROOM' | 'OTHER';
 export type NeedStatus = 'OPEN' | 'MATCHED' | 'COMPLETED' | 'CANCELLED';
-export type ApplicationStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED';
+export type ApplicationStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'WITHDRAWN';
 
 export const STUDY_TYPE_MAP: Record<StudyType, string> = {
   EXAM_REVIEW: '考试复习',
@@ -66,6 +66,7 @@ export const APPLICATION_STATUS_MAP: Record<ApplicationStatus, string> = {
   PENDING: '待审核',
   ACCEPTED: '已通过',
   REJECTED: '已拒绝',
+  WITHDRAWN: '已撤回',
 };
 
 export interface PageResult<T> {
